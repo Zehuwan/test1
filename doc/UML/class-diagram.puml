@@ -1,0 +1,234 @@
+@startuml
+class Main.Main {
+- {static} GUI gui
++ {static} void main(String[])
+}
+class Spawn.Spawn {
+# Spawner parentSpawnPoints
+}
+class GUI.GUI {
+~ JPanel panel
+~ JPanel panel2
+~ CustomLabel label
+~ JLabel vir1
+~ JLabel vir2
+~ JLabel vir3
+~ JLabel vir4
+~ JTextField vir1_name
+~ JTextField vir2_name
+~ JTextField vir3_name
+~ JTextField vir4_name
+~ JLabel vir1_param
+~ JLabel vir2_param
+~ JLabel vir3_param
+~ JLabel vir4_param
+~ SpinnerModel model1
+~ SpinnerModel model2
+~ SpinnerModel model3
+~ SpinnerModel model4
+~ JSpinner vir1_spin
+~ JSpinner vir2_spin
+~ JSpinner vir3_spin
+~ JSpinner vir4_spin
+~ JButton begin
+~ SimulationOptions simOptions
++ {static} SimulationOptions simOptions_copy
+- MainWindow mainWindow
++ void userOptions()
++ void actionPerformed(ActionEvent)
++ void openMainWindow(Map)
++ void closeMainWindow()
++ void showMessage(String,boolean)
+}
+class GUI.GUI$MessageDialog {
+}
+class GUI.GUI$MissingDataException {
+}
+class GUI.GUI$CustomLabel {
+- Font customFont
+- void loadCustomFont()
+- void setCustomFont()
+}
+class Structures.Position {
++ int x
++ int y
++ {static} int squaredDistanceBetween(Position,Position)
+}
+class GUI.MaxLengthTextField {
+- int maxLength
+}
+class GUI.MaxLengthTextField$DocumentLengthFilter {
+- int maxLength
++ void insertString(FilterBypass,int,String,AttributeSet)
++ void replace(FilterBypass,int,int,String,AttributeSet)
+}
+class Structures.HeightMap {
++ double[][] height
+}
+class Terrain.BiomeCreator {
++ {static} Biome getBiome(double)
++ {static} int[] getBiomeColor(double)
+}
+enum Terrain.Biome {
++  OCEAN
++  PLAINS
++  MOUNTAINS
+}
+class Terrain.Gradient {
+~ double scale_base
+~ {static} int size
+~ int octaves
+~ Random rand
+~ double[] seed
+~ double[][] generateGradientNoise2D()
+}
+class Creatures.Person {
+~ int x
+~ int vx
+~ int status
+~ int randomize
++ {static} int numInfected_0
++ {static} int numInfected_1
++ {static} int numInfected_2
++ {static} int numInfected_3
+~ double attack_0
+~ double attack_1
+~ double attack_2
+~ double attack_3
+~ SimulationOptions params
++ void fight(Person)
++ void paint(Graphics)
+~ void getStats()
+}
+abstract class Creatures.Creature {
+# int health
+# int attackStrength
+# int speed
+# Map parentMap
+# Random random
++ {static} Position position
++ int infectiousness
++ int drugResistance
++ int biomeResistance
++ int infectionSpeed
++ int virusCount
++ {static} Position getPosition()
++ {abstract}Creature resurrect()
++ {static} Color getIconColor()
++ {static} int getTeamID()
+# Position getNewRandomPosition()
+}
+class Simulation.Spawner {
++ ArrayList<Virus> Virus
++ Position position
+- int virusID
+- Map parentMap
++ {static} List<Virus> getSpawner()
++ void addSpawner()
++ Color getTeamColor()
+}
+class GUI.MainWindow {
+- ArrayList<Person> people
+- List<Creature> creatures
+- BufferedImage mapImage
+- List<Spawner> spawn
+~ SimulationOptions simOptions
+~ JPanel panel
+~ CustomLabel title_1
+~ CustomLabel title_2
+~ JPanel panel2
+~ JPanel panel3
+~ JLabel vir1
+~ JLabel vir1_amount
+~ JLabel vir2
+~ JLabel vir2_amount
+~ JLabel vir3
+~ JLabel vir3_amount
+~ JLabel vir4
+~ JLabel vir4_amount
+~ JLabel legend1
+~ JLabel legend2
+~ JLabel legend3
+~ JLabel legend4
++ void updateLabels()
++ void finishSimulation()
++ void actionPerformed(ActionEvent)
+}
+class GUI.MainWindow$CustomLabel {
+- Font customFont
+- void loadCustomFont()
+- void setCustomFont()
+}
+class GUI.MainWindow$MapPanel {
+- void drawVirusIcon(Graphics,Position,Color)
+- void drawSpawnerIcon(Graphics,Position,Color)
++ void paint(Graphics)
+}
+class GUI.MainWindow$MessageDialog {
+}
+class Structures.SimulationOptions {
++ ArrayList<String> virus_Names
++ ArrayList<Double> virus_Params
++ int mapSize
++ int nTeams
++ int teamPopulation
++ {static} int simulationSpeed
++ double noiseScale
++ int noiseOctaves
+}
+class Terrain.Map {
+- List<Spawner> SpawnPoints
+- HeightMap heightMap
+- List<Creature> creatures
+- boolean simulationComplete
+- SimulationOptions simulationOptions
+- Random random
+- int tickCounter
++ BiomeCreator.Biome getBiomeAt(Position)
++ Position getRandomPosition(List<BiomeCreator.Biome>)
++ HeightMap getHeightMap()
++ List<Creature> getCreatureList()
++ List<Spawner> getSpawnerList()
++ int getMapSize()
+}
+class Creatures.Virus {
++ int maxInfectiousness
++ int maxSpeed
+~ double multiplier
++ Creature resurrect()
+}
+
+
+java.awt.event.ActionListener <|.. GUI.GUI
+GUI.JFrame <|-- GUI.GUI
+GUI.GUI +.. GUI.GUI$MessageDialog
+GUI.JDialog <|-- GUI.GUI$MessageDialog
+GUI.GUI +.. GUI.GUI$MissingDataException
+GUI.RuntimeException <|-- GUI.GUI$MissingDataException
+GUI.GUI +.. GUI.GUI$CustomLabel
+GUI.JLabel <|-- GUI.GUI$CustomLabel
+javax.swing.JTextField <|-- GUI.MaxLengthTextField
+GUI.MaxLengthTextField +.. GUI.MaxLengthTextField$DocumentLengthFilter
+GUI.DocumentFilter <|-- GUI.MaxLengthTextField$DocumentLengthFilter
+Creatures.Virus <|-- Simulation.Spawner
+GUI.ActionListener <|.. GUI.MainWindow
+GUI.JFrame <|-- GUI.MainWindow
+GUI.MainWindow +.. GUI.MainWindow$CustomLabel
+GUI.JLabel <|-- GUI.MainWindow$CustomLabel
+GUI.MainWindow +.. GUI.MainWindow$MapPanel
+GUI.JPanel <|-- GUI.MainWindow$MapPanel
+GUI.MainWindow +.. GUI.MainWindow$MessageDialog
+GUI.JDialog <|-- GUI.MainWindow$MessageDialog
+Creatures.Creature <|-- Creatures.Virus
+GUI.MainWindow <|-- Person
+GUI.GUI <|-- Spawner
+Spawner <|-- Spawn.Spawn
+Main.Main <|-- GUI.GUI
+Map <|-- SimulationOptions
+Map <|--Position
+Map <|-- HeightMap
+Map <|-- Terrain.Gradient
+Map <|-- Biome
+
+GUI.GUI <|-- Map
+@enduml

@@ -1,0 +1,138 @@
+@startuml
+class Main.Main {
+- {static} {mainWindow 0} gui
+
+}
+class Spawn.Spawn {
+}
+class GUI.GUI {
+~ vir1_name
+~ vir2_name
+~ vir3_name
+~ vir4_name
+~ {50} vir1_param
+~ {60} vir2_param
+~ {70} vir3_param
+~ {80} vir4_param
+- MainWindow mainWindow
+}
+class GUI.GUI$MessageDialog {
+}
+class GUI.GUI$MissingDataException {
+}
+class GUI.GUI$CustomLabel {
+}
+class Structures.Position {
++ {120} x
++ {250} y
+
+}
+class GUI.MaxLengthTextField {
+
+}
+class GUI.MaxLengthTextField$DocumentLengthFilter {
+- int maxLength {13}
+}
+class Structures.HeightMap {
++ {100,300} height
+}
+class Terrain.BiomeCreator {
+}
+enum Terrain.Biome {
+}
+class Terrain.Gradient {
+~ {1.0} scale_base
+~ {700} size
+~ {10} octaves
+~ {5,7,-4,-10,...} rand
+~ {700*700} seed
+}
+class Creatures.Person {
+~ {120} x
+~ {250} y
+~ {50} status
++ {50} numInfected_0
++ {60} numInfected_1
++ {70} numInfected_2
++ {80} numInfected_3
+}
+abstract class Creatures.Creature {
+# {100} health
+# {30} speed
+# Map{1} parentMap
+# {5,7,-4,-10,...} random
++ {120,250} position
++ {100} infectiousness
++ {15} drugResistance
++ {25} biomeResistance
++ 90 infectionSpeed
++ {50} virusCount
+}
+class Simulation.Spawner {
++ vir1_name,vir2_name,vir3_name,vir4_name Virus
++ {120,250} position
+- {0,1,2,3} virusID
+- Map{1} parentMap
+}
+class GUI.MainWindow {
+- {vir1_name,vir2_name,vir3_name,vir4_name} people
+- {vir1_name,vir2_name,vir3_name,vir4_name} creatures
+}
+class GUI.MainWindow$CustomLabel {
+- Mars-Bold.ttf
+
+}
+class GUI.MainWindow$MapPanel {
+}
+class GUI.MainWindow$MessageDialog {
+}
+class Structures.SimulationOptions {
++ {30} simulationSpeed
+}
+class Terrain.Map {
+- {vir1_spawn,vir2_spawn,vir3_spawn,vir4_spawn,} SpawnPoints
+- {0,1,2,3,...} heightMap
+- {vir1_name,vir2_name,vir3_name,vir4_name} people
+- {vir1_name,vir2_name,vir3_name,vir4_name} creatures
+- {5,7,-4,-10,...} random
+}
+class Creatures.Virus {
++ {200} maxInfectiousness
++ {200} maxSpeed
+~ {0.75} multiplier
+}
+
+
+java.awt.event.ActionListener <|.. GUI.GUI
+GUI.JFrame <|-- GUI.GUI
+GUI.GUI +.. GUI.GUI$MessageDialog
+GUI.JDialog <|-- GUI.GUI$MessageDialog
+GUI.GUI +.. GUI.GUI$MissingDataException
+GUI.RuntimeException <|-- GUI.GUI$MissingDataException
+GUI.GUI +.. GUI.GUI$CustomLabel
+GUI.JLabel <|-- GUI.GUI$CustomLabel
+javax.swing.JTextField <|-- GUI.MaxLengthTextField
+GUI.MaxLengthTextField +.. GUI.MaxLengthTextField$DocumentLengthFilter
+GUI.DocumentFilter <|-- GUI.MaxLengthTextField$DocumentLengthFilter
+Creatures.Virus <|-- Simulation.Spawner
+GUI.ActionListener <|.. GUI.MainWindow
+GUI.JFrame <|-- GUI.MainWindow
+GUI.MainWindow +.. GUI.MainWindow$CustomLabel
+GUI.JLabel <|-- GUI.MainWindow$CustomLabel
+GUI.MainWindow +.. GUI.MainWindow$MapPanel
+GUI.JPanel <|-- GUI.MainWindow$MapPanel
+GUI.MainWindow +.. GUI.MainWindow$MessageDialog
+GUI.JDialog <|-- GUI.MainWindow$MessageDialog
+Creatures.Creature <|-- Creatures.Virus
+GUI.MainWindow <|-- Person
+GUI.GUI <|-- Spawner
+Spawner <|-- Spawn.Spawn
+Main.Main <|-- GUI.GUI
+Map <|-- SimulationOptions
+Map <|--Position
+Map <|-- HeightMap
+Map <|-- Terrain.Gradient
+Map <|-- Biome
+
+GUI.GUI <|-- Map
+@enduml
